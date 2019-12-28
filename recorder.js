@@ -6,14 +6,13 @@ module.exports = class Recorder {
 
   startRecording() {
 
-    console.log("Record...");
+    console.log("START RECORDING");
 
-    console.log("Recording started");
   }
 
   stopRecordingAndSavePerformance() {
 
-    console.log("stop");
+    console.log("STOP RECORDING");
 
 //	rec.stop();
 //	gumStream.getAudioTracks()[0].stop();
