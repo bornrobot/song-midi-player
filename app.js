@@ -6,7 +6,7 @@ var midiPlayer = require('./midiplayer.js');
 const db = mysql.createConnection(config);
 console.log('Connected to database');
 
-let recorder = new Recorder();
+//let recorder = new Recorder();
 
 //Event msg recieved to play a midi song form the library...
 //playing a song is:
@@ -16,11 +16,17 @@ let recorder = new Recorder();
 //stop the recording
 
 //connect to message queue and get songs to play midi...
-play(387);
+process.argv.forEach(function (val, index, array) {
+  if(index > 1) {
+    play( val);
+  }
+});
 
 async function play(songId) {
 
   fetchSong(songId, async function(song) {
+
+let recorder = new Recorder();
 
     await recorder.startRecording(songId);
 
@@ -50,5 +56,5 @@ function fetchSong(songId, callback) {
   });
 }
 
+console.log("closing DB");
 db.end();
-

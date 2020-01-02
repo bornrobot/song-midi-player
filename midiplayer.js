@@ -25,7 +25,7 @@ async function play(song) {
   console.log("notes: " + song.musicians[0].timeIntervals.length);
 
   //pause for the recorder to startup. TODO: Hopefully we can trim that later...
-  await resolveAfter(5000);
+  await resolveAfter(3000);
 
   //foreach time interval... (assuming all musicians have the same number of intervals!)
   for(let interval=0; interval < song.musicians[0].timeIntervals.length; interval++) {

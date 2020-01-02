@@ -1,12 +1,12 @@
 var redis = require('redis');
-var client = redis.createClient(36379, "127.0.0.1");
 
-client.on('connect', function() {
-    console.log('Redis client connected');
+var client = redis.createClient(6379, "127.0.0.1");
+client.on('connect', function() { 
+  console.log('Redis client connected'); 
 });
 
-client.on('error', function (err) {
-    console.log('Something went wrong ' + err);
+client.on('error', function (err) { 
+  console.log('Something went wrong ' + err); 
 });
 
 module.exports = class Recorder {
@@ -31,11 +31,11 @@ module.exports = class Recorder {
 
     client.publish("notification", "{\"Action\":\"StopRecording\", \"songId\":" + songId + "}", function(){
       console.log("sent recorder stop");
-    });
-
 //	rec.stop();
 //	gumStream.getAudioTracks()[0].stop();
 //	rec.exportWAV(createDownloadLink);
+      process.exit();
+    });
   }
 
   createDownloadLink(blob) {
