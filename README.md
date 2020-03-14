@@ -1,6 +1,10 @@
-Born Robot Song Player 
+Born Robot Song Performer 
 
-* Play song (Tempo, tracks, Notes, song name)
+* Perform song (Tempo, tracks, Notes, song name)
+
+* Perform song and record (Tempo, tracks, Notes, song name)
+
+* Play notes (track, Note)
 
 
-output: midi / sound
+output: midi / sound, recorder control commands
