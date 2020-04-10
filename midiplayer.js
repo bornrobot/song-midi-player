@@ -21,6 +21,9 @@ function resolveAfter(ms) {
 async function play(song) {
 
   console.log("Start performance...");
+
+  console.log(song);
+
   console.log("musicians: " + song.musicians.length);
   console.log("notes: " + song.musicians[0].timeIntervals.length);
 

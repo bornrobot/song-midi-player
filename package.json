@@ -1,17 +1,23 @@
 {
-  "name": "song-writer",
+  "name": "br-perform",
   "version": "1.0.0",
   "main": "app.js",
   "dependencies": {
-    "mysql": "2.17.1",
-    "jzz": "",
-    "redis": ""
+    "body-parser": "",
+    "chokidar": "",
+    "cors": "",
+    "ejs": "",
+    "express": "",
+    "jzz": "^1.0.3",
+    "midi-player": ""
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon app.js",
+    "start": "node app.js"
   },
-  "author": "",
+  "author": "Ed Robertson",
   "license": "ISC",
-  "description": ""
+  "description": "Performs bornrobot generated song by sending out MIDI messages."
 }
