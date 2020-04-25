@@ -28,13 +28,17 @@ async function play(song) {
   console.log("notes: " + song.musicians[0].timeIntervals.length);
 
   //pause for the recorder to startup. TODO: Hopefully we can trim that later...
-  await resolveAfter(3000);
+  await resolveAfter(1000);
 
   //foreach time interval... (assuming all musicians have the same number of intervals!)
   for(let interval=0; interval < song.musicians[0].timeIntervals.length; interval++) {
 
     //foreach musician...
     for(let i=0; i < song.musicians.length; i++) {
+      
+      console.log("musician index: " + i);
+      console.log("time intervals: " + song.musicians[i].timeIntervals.length)
+
       if(interval < song.musicians[i].timeIntervals.length) { 
         playMidiNotes(song.musicians[i].timeIntervals[interval].notes);
       }
@@ -42,7 +46,7 @@ async function play(song) {
     await resolveAfter((30 / song.Tempo) * 1000);
   }
 
-  await resolveAfter(10000);
+  await resolveAfter(5000);
 }
 
 function playMidiNotes(notes) {
@@ -76,7 +80,7 @@ function playMidiNote(note) {
 
     //Should really link the sustain to the tempo???
 
-    playNote(midiNote, note.channel, note.sustain * 250, 127);
+    playNote(midiNote, note.channel -1, note.sustain * 250, 127);
 /*
     output.playNote(
       midiNote,
@@ -92,11 +96,9 @@ function playMidiNote(note) {
 
 async function playNote(midiNote, channel, duration, velocity) {
   let port = midiOut;
-
-  //await port.noteOn(0, 'C5', 127);
-  await port.noteOn(0, midiNote, 127);
+  await port.noteOn(channel, midiNote, 127);
   await port.wait(duration);
-  await port.noteOff(0, midiNote);
+  await port.noteOff(channel, midiNote);
   //await port.close();
   console.log('done!');
 }

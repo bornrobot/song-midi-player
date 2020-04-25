@@ -1,63 +1,68 @@
-var redis = require('redis');
+const http = require('http');
 
-var client = redis.createClient(6379, "127.0.0.1");
-client.on('connect', function() { 
-  console.log('Redis client connected'); 
-});
+module.exports = {
+ startRecording,
+ stopRecording
+};
 
-client.on('error', function (err) { 
-  console.log('Something went wrong ' + err); 
-});
+function startRecording(song) {
 
-module.exports = class Recorder {
+  const options = {
+    hostname: 'localhost',
+    port: 5001,
+    path: '/startRecording',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Content-Length': song.length
+    }
+  };
 
-  constructor() {
-    console.log("Init recorder");
-  }
+  console.log("Start recorder ");
 
-  startRecording(songId) {
+  let req = http.request(options, (res) => {
+    console.log('statusCode: ${res.statusCode}');
 
-    console.log("Start recorder " + songId);
-
-    //Add message to queue to start recording...
-    client.publish("notification", "{\"Action\":\"StartRecording\", \"songId\":" + songId + "}", function(){
-      console.log("sent recorder start");
+    res.on('data', (d) => {
+      process.stdout.write(d);
     });
-  }
+  });
 
-  stopRecording(songId) {
+  req.on('error', (error) => {
+    console.error(error);
+  });
 
-    console.log("Stop recorder " + songId);
+  req.write(song);
+  req.end();
+}
 
-    client.publish("notification", "{\"Action\":\"StopRecording\", \"songId\":" + songId + "}", function(){
-      console.log("sent recorder stop");
-//	rec.stop();
-//	gumStream.getAudioTracks()[0].stop();
-//	rec.exportWAV(createDownloadLink);
-      process.exit();
+function stopRecording(song) {
+
+  console.log("Stop recorder " + song.length);
+
+  const options = {
+    hostname: 'localhost',
+    port: 5001,
+    path: '/stopRecording',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Content-Length': song.length
+    }
+  };
+
+  let req = http.request(options, (res) => {
+    console.log('statusCode: ${res.statusCode}');
+
+    res.on('data', (d) => {
+      process.stdout.write(d);
     });
-  }
+  });
 
-  createDownloadLink(blob) {
+  req.on('error', (error) => {
+    console.error(error);
+  });
 
-    var xhr=new XMLHttpRequest();
-    xhr.onload=function(e) {
-      if(this.readyState === 4) {
-          console.log("Server returned: ",e.target.responseText);
-      }
-    };
-
-    var fd=new FormData();
-
-    var songLibraryUrl = "https://library.bornrobot.com";
-
-    var songJson  = JSON.stringify(songGen.song);
-
-    //fd.append("bandName", songGen.song.BandName);
-    fd.append("json", songJson);
-    fd.append("wav", blob, "filename.wav");
-    xhr.open("POST", songLibraryUrl + "/add",true);
-    xhr.send(fd);
-
-  }
+  req.write(song);
+  req.end();
 }

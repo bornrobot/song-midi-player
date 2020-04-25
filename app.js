@@ -5,7 +5,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
-//const midip = require('midi-player');
 var cors = require('cors')
 
 const {getIndex, postPerform} = require('./routes');

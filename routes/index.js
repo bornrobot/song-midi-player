@@ -1,27 +1,31 @@
-const playSong = require("../midiplayer.js");
+const midiplayer = require("../midiplayer.js");
+const recorder = require("../recorder.js");
+
+let strJson = '';
 
 module.exports = {
   getIndex: (req, res) => {
 
-    // TODO: get a list of songs in the queue...
+    // TODO: get status...
 
     res.json({ 
       title:"Song performer",
-      queueLength: 0
+      status: "BUSY"
     });
   },
 
   postPerform: (req, res) => {
 
-    let json = req.body;
+    strJson = JSON.stringify(req.body);
 
-    console.log(req.body);
-    
-    console.log("START RECORDING");
+    console.log("Start recording...");
+    recorder.startRecording(strJson);
         
-    console.log("Play song...");
-    playSong.play(json);
-    
-    console.log("STOP RECORDING");
+    midiplayer.play(req.body)
+    .then( function () {
+      console.log("Stop recording...");
+      recorder.stopRecording(strJson);
+      res.sendStatus(200);
+    });
   }
 };
