@@ -9,7 +9,8 @@
     "ejs": "",
     "express": "",
     "jzz": "^1.0.3",
-    "midi-player": ""
+    "midi-player": "",
+    "uuid": ""
   },
   "devDependencies": {},
   "scripts": {

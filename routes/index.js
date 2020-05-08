@@ -1,5 +1,6 @@
 const midiplayer = require("../midiplayer.js");
 const recorder = require("../recorder.js");
+const { v4: uuidv4 } = require('uuid');
 
 let strJson = '';
 
@@ -16,15 +17,19 @@ module.exports = {
 
   postPerform: (req, res) => {
 
-    strJson = JSON.stringify(req.body);
+    let uuid = uuidv4();
 
-    console.log("Start recording...");
-    recorder.startRecording(strJson);
+    console.log("Start recording " + uuid + "...");
+
+    recorder.startRecording(req.body, uuid);
         
     midiplayer.play(req.body)
     .then( function () {
       console.log("Stop recording...");
-      recorder.stopRecording(strJson);
+      recorder.stopRecording(uuid);
+
+      res.write(uuid);
+
       res.sendStatus(200);
     });
   }

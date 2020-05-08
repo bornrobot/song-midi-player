@@ -5,7 +5,11 @@ module.exports = {
  stopRecording
 };
 
-function startRecording(song) {
+function startRecording(song, uuid) {
+  
+  song.Uuid = uuid;
+
+  let payload = JSON.stringify(song);
 
   const options = {
     hostname: 'localhost',
@@ -14,7 +18,7 @@ function startRecording(song) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Content-Length': song.length
+      'Content-Length': payload.length
     }
   };
 
@@ -32,13 +36,15 @@ function startRecording(song) {
     console.error(error);
   });
 
-  req.write(song);
+  req.write(payload);
   req.end();
 }
 
-function stopRecording(song) {
+function stopRecording(uuid) {
 
-  console.log("Stop recorder " + song.length);
+  console.log("Stop recorder " + uuid);
+
+  let uuidJson = "{\"uuid\":\"" + uuid + "\"}";
 
   const options = {
     hostname: 'localhost',
@@ -47,7 +53,7 @@ function stopRecording(song) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Content-Length': song.length
+      'Content-Length': uuidJson.length
     }
   };
 
@@ -63,6 +69,6 @@ function stopRecording(song) {
     console.error(error);
   });
 
-  req.write(song);
+  req.write(uuidJson);
   req.end();
 }
