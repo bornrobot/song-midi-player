@@ -7,7 +7,7 @@ module.exports = {
 
 function startRecording(song, uuid) {
   
-  song.Uuid = uuid;
+  song.uuid = uuid;
 
   let payload = JSON.stringify(song);
 
@@ -22,10 +22,10 @@ function startRecording(song, uuid) {
     }
   };
 
-  console.log("Start recorder ");
+  console.log("Request recording start");
 
   let req = http.request(options, (res) => {
-    console.log('statusCode: ${res.statusCode}');
+    console.log(`statusCode: ${res.statusCode}`);
 
     res.on('data', (d) => {
       process.stdout.write(d);
@@ -42,9 +42,9 @@ function startRecording(song, uuid) {
 
 function stopRecording(uuid) {
 
-  console.log("Stop recorder " + uuid);
+  console.log(`Request recording stop ${uuid}`);
 
-  let uuidJson = "{\"uuid\":\"" + uuid + "\"}";
+  let payload = JSON.stringify({uuid: uuid});
 
   const options = {
     hostname: 'localhost',
@@ -53,13 +53,13 @@ function stopRecording(uuid) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Content-Length': uuidJson.length
+      'Content-Length': payload.length
     }
   };
 
   let req = http.request(options, (res) => {
 
-    console.log('statusCode: ${res.statusCode}');
+    console.log(`statusCode: ${res.statusCode}`);
 
     res.on('data', (d) => {
       process.stdout.write(d);
@@ -70,6 +70,6 @@ function stopRecording(uuid) {
     console.error(error);
   });
 
-  req.write(uuidJson);
+  req.write(payload);
   req.end();
 }

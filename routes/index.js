@@ -26,7 +26,7 @@ module.exports = {
 
     uuid = uuidv4();
 
-    console.log("Start recording " + uuid + "...");
+    console.log(`Start recording ${uuid}...`);
 
     recorder.startRecording(req.body, uuid);
 
