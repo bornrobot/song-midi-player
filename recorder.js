@@ -58,6 +58,7 @@ function stopRecording(uuid) {
   };
 
   let req = http.request(options, (res) => {
+
     console.log('statusCode: ${res.statusCode}');
 
     res.on('data', (d) => {
