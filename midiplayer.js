@@ -76,7 +76,13 @@ function playMidiNote(note) {
 
     // Play a note at full velocity on all channels)
     //"all", /
-    let midiNote = getNote(note.pitch);
+
+
+    let midiNote = note.pitch;
+
+    if(note.channel != 10) {
+      midiNote = getNote(note.pitch);
+    }
 
     //Should really link the sustain to the tempo???
 
