@@ -7,6 +7,9 @@ module.exports = {
   play
 }
 
+
+const MIDI_C4 = 72;
+
 function resolveAfter(ms) {
 
   console.log("Wait " + ms);
@@ -25,22 +28,22 @@ async function play(song) {
   console.log(song);
 
   console.log("musicians: " + song.musicians.length);
-  console.log("notes: " + song.musicians[0].timeIntervals.length);
+  console.log("notes: " + song.musicians[0].ticks.length);
 
   //pause for the recorder to startup. TODO: Hopefully we can trim that later...
   await resolveAfter(1000);
 
   //foreach time interval... (assuming all musicians have the same number of intervals!)
-  for(let interval=0; interval < song.musicians[0].timeIntervals.length; interval++) {
+  for(let interval=0; interval < song.musicians[0].ticks.length; interval++) {
 
     //foreach musician...
     for(let i=0; i < song.musicians.length; i++) {
       
       console.log("musician index: " + i);
-      console.log("time intervals: " + song.musicians[i].timeIntervals.length)
+      console.log("time intervals: " + song.musicians[i].ticks.length)
 
-      if(interval < song.musicians[i].timeIntervals.length) { 
-        playMidiNotes(song.musicians[i].timeIntervals[interval].notes);
+      if(interval < song.musicians[i].ticks.length) { 
+        playMidiNotes(song.musicians[i].ticks[interval].notes);
       }
     }
     await resolveAfter((30 / song.Tempo) * 1000);
@@ -73,30 +76,24 @@ function playMidiNote(note) {
 
     // Play a chord on channel 7
     //output.playNote(["C3", "D#3", "G3"], 7);
+    // Play a note at full velocity on all channels) "all", 
 
-    // Play a note at full velocity on all channels)
-    //"all", /
+    let midiNote = getNote(note.pitch);
 
-
-    let midiNote = note.pitch;
-
-    if(note.channel != 10) {
-      midiNote = getNote(note.pitch);
-    }
-
-    //Should really link the sustain to the tempo???
+    //TODO: Should really link the sustain to the tempo???
 
     playNote(midiNote, note.channel -1, note.sustain * 250, 127);
+
 /*
     output.playNote(
       midiNote,
-      note.channel,
-      {
+      note.channel, {
         duration: note.sustain * 250,
         velocity: 127
       }
     );
-    */
+*/
+
   }
 }
 
@@ -109,42 +106,23 @@ async function playNote(midiNote, channel, duration, velocity) {
   console.log('done!');
 }
 
-function  getNote(pitch) {
+function  getOctave(pitch) {
+  return Math.floor(pitch / 12) -1;
+}
 
-    let note = (pitch) % 7;
-
-    switch(note) {
-      case 1:
-        note += 1;
-        break;
-
-      case 2:
-      case 3:
-        note += 2;
-        break;
-
-      case 4:
-        note += 3;
-        break;
-
-      case 5:
-        note+= 4;
-        break;
-
-      case 6:
-        note += 5;
-        break;
-    }
-
+function getNote(pitch) {
   const notes = [ "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" ];
 
-  return notes[note] + getOctave(pitch);
+  let coff = (pitch - MIDI_C4) % 12;
+  if(coff < 0){
+    coff = 12 + coff;
+  }
+
+  let octv = getOctave(pitch);
+  let ret = notes[coff] + "" + octv;
+
+  console.log("chromoff: " + coff + " oct: "+ octv + " md: " + ret + "\n");
+
+  return notes[coff] + "" + octv;
 }
 
-function getOctave(pitch) {
-  let oct = 0
-  if(pitch > 0 || pitch < 0) {
-    oct = Math.floor(pitch / 7);
-  }
-  return oct +2;
-}
