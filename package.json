@@ -9,10 +9,10 @@
     "ejs": "",
     "express": "",
     "jzz": "^1.0.3",
+    "jzz-midi-smf": "^1.5.2",
     "midi-player": "",
     "uuid": ""
   },
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon app.js",

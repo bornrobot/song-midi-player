@@ -14,11 +14,13 @@ const port = 5003;
 app.set('port', process.env.port || port); // set express to use this port
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json()); // parse form data client
+app.use(bodyParser.text({ type: 'audio/midi' }))
 app.use(cors());
 
 // routes for the app
-app.get('/', getIndex);
-app.post('/perform', postPerform);
+app.get('/performers/', getIndex);
+app.get('/performers/a', getIndex);
+app.post('/performers/a', postPerform);
 
 // set the app to listen on the port
 app.listen(port, () => {

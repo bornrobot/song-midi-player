@@ -1,10 +1,12 @@
 var JZZ = require('jzz');
+require('jzz-midi-smf')(JZZ);
 
 var midiOut = JZZ().openMidiOut();
 console.log(JZZ().info());
 
 module.exports = {
-  play
+  playCustomJson,
+  playMidiFile
 }
 
 
@@ -21,9 +23,9 @@ function resolveAfter(ms) {
   });
 }
 
-async function play(song) {
+async function playCustomJson(song) {
 
-  console.log("Start performance...");
+  console.log("Play custom JSON...");
 
   console.log(song);
 
@@ -49,6 +51,24 @@ async function play(song) {
     await resolveAfter((30 / song.Tempo) * 1000);
   }
 
+  await resolveAfter(5000);
+}
+
+async function playMidiFile(midiBase64Encoded) {
+
+  console.log("Play MIDI file...");
+
+  console.log(midiBase64Encoded);
+
+  //TODO: midiOut.Play (midiBase64Encoded);
+
+  let midi = JZZ.lib.fromBase64(midiBase64Encoded);
+
+var smf = new JZZ.MIDI.SMF(midi);
+var player = smf.player();
+player.connect(midiOut);
+player.play();
+ 
   await resolveAfter(5000);
 }
 
@@ -107,7 +127,8 @@ async function playNote(midiNote, channel, duration, velocity) {
 }
 
 function  getOctave(pitch) {
-  return Math.floor(pitch / 12) -1;
+  //return Math.floor(pitch / 12) -1;
+  return Math.floor(pitch / 12);
 }
 
 function getNote(pitch) {
